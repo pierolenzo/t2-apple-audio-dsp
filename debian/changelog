@@ -1,9 +1,17 @@
-t2-apple-audio-dsp (0.1.0-1) oracular; urgency=medium
+t2-apple-audio-dsp (0.3.1-1) oracular; urgency=low
+
+  * Added support for 16_4 model.
+  * Session-restart notice in package; removed reboot-required.
+  * README: document 16_4, no reboot required.
+
+ -- lemmygl@protonmail.com  28 Feb 2026
+
+t2-apple-audio-dsp (0.3.0-1) oracular; urgency=medium
 
   * Multi-model support for T2 Apple MacBooks
   * Automatic model detection during installation
   * Supports MacBookPro16_1 and other models (comma replaced with underscore)
   * Requires Ubuntu 25.10 (Oracular) or later
 
- -- lemmygl@protonmail.com  30 Nov 2025
+ -- lemmygl@protonmail.com  20 Feb 2026
 
