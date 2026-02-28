@@ -1,7 +1,7 @@
 CHANGES
 -------
 
-* 0.3.1-1:
+* 1.0.0-1:
 
   ** Added support for 16_4 model.
 

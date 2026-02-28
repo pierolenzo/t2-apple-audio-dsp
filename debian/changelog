@@ -1,4 +1,4 @@
-t2-apple-audio-dsp (0.3.1-1) oracular; urgency=low
+t2-apple-audio-dsp (1.0.0-1) oracular; urgency=low
 
   * Added support for 16_4 model.
   * Session-restart notice in package; removed reboot-required.
