@@ -32,19 +32,19 @@ Thanks to Asahi Linux, chadmed, Drakelerex and Manawyrm.
 
 ## Installation instructions
 
-First follow [t2-audio](https://wiki.t2linux.org/guides/audio-config) instructions and install pipewire.
+Install base T2 audio config from [t2-audio](https://wiki.t2linux.org/guides/audio-config)
 
 Once the audio is working, you can install the FIRs config in your system.
 Note that this configuration has been tested on Ubuntu 25.10. 
-For previous versions please check speakers_161 branch.
+For previous versions please check speakers_161 and mic branches.
 
-### 1a - Ubuntu
+### 1a - Ubuntu dep package
 
 Download and Install the Ubuntu package from master:
 
 https://github.com/lemmyg/t2-apple-audio-dsp/releases
 
-Manual installation:
+### 1b - Manual installation:
 
 ```sh
 sudo apt install pipewire pipewire-pulse wireplumber libpipewire-0.3-modules-extra libspa-0.2-modules-extra
@@ -58,7 +58,7 @@ cd t2-apple-audio-dsp
 bash install.sh
 ```
 
-### 1b - NixOS Deprecated. Please follow speakers_161
+### 1c - NixOS Not tested yet with this new config. Please follow speakers_161
 
 Copy `pipewire_sink_conf.nix` to `/etc/nixos/` and import it in `configuration.nix`.
 

@@ -102,6 +102,11 @@ if [ -f "/etc/pipewire/pipewire.conf.d/t2_${OLD_MODEL_ID}_mic.conf" ]; then
     rm -f "/etc/pipewire/pipewire.conf.d/t2_${OLD_MODEL_ID}_mic.conf"
 fi
 
+# Signal that a reboot is required
+if [ -d /var/run ]; then
+    touch /var/run/reboot-required
+    echo "t2-apple-audio-dsp" >> /var/run/reboot-required.pkgs
+fi
 echo "To apply changes, restart pipewire for your user:"
 echo "  systemctl --user restart wireplumber pipewire pipewire-pulse"
 echo "Or log out and log back in."

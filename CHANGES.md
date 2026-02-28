@@ -3,7 +3,7 @@ CHANGES
 
 * 0.3.1-1:
 
-  ** Fixed postinst model selection
+  ** Added reboot signal to dep package and docs improvements.
 
 * 0.3.0-1:
 
