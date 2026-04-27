@@ -10,8 +10,8 @@
     enable = lib.mkEnableOption "";
     model = lib.mkOption {
       default = null;
-      description = "The model of your T2 MacBook. Options are 16_1, 16_4 and 9_1.";
-      type = lib.types.enum [ "16_1" "16_4" "9_1" ];
+      description = "The model of your T2 MacBook. Options are 16_1, 16_2, 16_4 and 9_1.";
+      type = lib.types.enum [ "16_1" "16_2" "16_4" "9_1" ];
     };
   };
 
