@@ -22,9 +22,11 @@ function handleDevice(device)
       goto skip_route
     end
 
-    -- Handle both Speakers and BuiltinMic/Digital Mic
+    -- Handle Speakers and all known mic route descriptions
     local desc = route.description
-    if desc ~= "Speakers" and desc ~= "Speaker" and desc ~= "BuiltinMic" and desc ~= "Digital Mic" then
+    if desc ~= "Speakers" and desc ~= "Speaker"
+       and desc ~= "BuiltinMic" and desc ~= "Digital Mic"
+       and desc ~= "Internal Microphone" and desc ~= "Internal Mic" then
       goto skip_route
     end
 
