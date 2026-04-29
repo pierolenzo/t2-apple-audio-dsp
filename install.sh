@@ -68,9 +68,9 @@ echo "Installing DSP config for ${MODEL}"
 
 # Install WirePlumber DSP config (uses node.software-dsp module like Asahi Linux)
 if ls ${CONFIG_DIR}/${MODEL_DIR}/*-dsp.conf 1>/dev/null 2>&1; then
-  echo "Copying WirePlumber DSP config to /etc/wireplumber/wireplumber.conf.d"
-  sudo mkdir -p /etc/wireplumber/wireplumber.conf.d
-  sudo cp ${CONFIG_DIR}/${MODEL_DIR}/*-dsp.conf /etc/wireplumber/wireplumber.conf.d/
+  echo "Copying WirePlumber DSP config to /usr/share/wireplumber/wireplumber.conf.d"
+  sudo mkdir -p /usr/share/wireplumber/wireplumber.conf.d
+  sudo cp ${CONFIG_DIR}/${MODEL_DIR}/*-dsp.conf /usr/share/wireplumber/wireplumber.conf.d/
 fi
 
 # Install FIRs, DSP graphs, and Lua scripts to /usr/share/t2-linux-audio/${MODEL_DIR}
