@@ -8,7 +8,7 @@
         "label": "mixer",
         "name": "mixL",
         "control": {
-          "Gain 1": 2
+          "Gain 1": 1.0
         }
       },
       {
@@ -16,7 +16,7 @@
         "label": "mixer",
         "name": "mixR",
         "control": {
-          "Gain 1": 2
+          "Gain 1": 1.0
         }
       },
       {
@@ -24,7 +24,7 @@
         "label": "mixer",
         "name": "mixO",
         "control": {
-          "Gain 1": 2
+          "Gain 1": 1.0
         }
       },
       {
@@ -32,14 +32,14 @@
         "plugin": "https://chadmed.au/triforce",
         "name": "bf",
         "control": {
-          "h_angle": 230.0,
+          "h_angle": 80.0,
           "v_angle": 0.0,
           "opt_freq": 1100.0,
           "t_win": 500.0,
-          "mic2_x": 0.02,
+          "mic2_x": 0.0175,
           "mic2_y": 0.00,
-          "mic3_x": 0.01,
-          "mic3_y": 0.0173
+          "mic3_x": 0.0185,
+          "mic3_y": 0.039
         }
       },
       {
@@ -47,7 +47,18 @@
         "label": "mixer",
         "name": "mixFinal",
         "control": {
-          "Gain 1": 60
+          "Gain 1": 4.0
+        }
+      },
+      {
+        "type": "ladspa",
+        "plugin": "/usr/lib64/ladspa/librnnoise_ladspa.so",
+        "label": "noise_suppressor_mono",
+        "name": "rnnoise",
+        "control": {
+          "VAD Threshold (%)": 50.0,
+          "VAD Grace Period (ms)": 200.0,
+          "Retroactive VAD Grace (ms)": 100.0
         }
       },
       {
@@ -58,6 +69,27 @@
           "Freq": 120,
           "Gain": 1,
           "Q": 0.707
+        }
+      },
+      {
+        "type": "lv2",
+        "plugin": "http://lsp-plug.in/plugins/lv2/expander_mono",
+        "name": "expander",
+        "control": {
+          "al": 0.015,
+          "er": 4.0,
+          "at": 1.0,
+          "rt": 100.0
+        }
+      },
+      {
+        "type": "lv2",
+        "plugin": "http://lsp-plug.in/plugins/lv2/limiter_mono",
+        "name": "limiter",
+        "control": {
+          "th": 0.95,
+          "at": 0.1,
+          "rt": 10.0
         }
       }
     ],
@@ -76,11 +108,23 @@
       },
       {
         "output": "bf:out",
+        "input": "rnnoise:Input"
+      },
+      {
+        "output": "rnnoise:Output",
+        "input": "hpf:In"
+      },
+      {
+        "output": "hpf:Out",
+        "input": "expander:in"
+      },
+      {
+        "output": "expander:out",
         "input": "mixFinal:In 1"
       },
       {
         "output": "mixFinal:Out",
-        "input": "hpf:In"
+        "input": "limiter:in"
       }
     ],
     "inputs": [
@@ -89,7 +133,7 @@
       "mixO:In 1"
     ],
     "outputs": [
-      "hpf:Out"
+      "limiter:out"
     ]
   },
   "capture.props": {
