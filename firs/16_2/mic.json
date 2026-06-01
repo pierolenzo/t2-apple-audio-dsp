@@ -47,18 +47,7 @@
         "label": "mixer",
         "name": "mixFinal",
         "control": {
-          "Gain 1": 4.0
-        }
-      },
-      {
-        "type": "ladspa",
-        "plugin": "/usr/lib64/ladspa/librnnoise_ladspa.so",
-        "label": "noise_suppressor_mono",
-        "name": "rnnoise",
-        "control": {
-          "VAD Threshold (%)": 50.0,
-          "VAD Grace Period (ms)": 200.0,
-          "Retroactive VAD Grace (ms)": 100.0
+          "Gain 1": 40.0
         }
       },
       {
@@ -69,27 +58,6 @@
           "Freq": 120,
           "Gain": 1,
           "Q": 0.707
-        }
-      },
-      {
-        "type": "lv2",
-        "plugin": "http://lsp-plug.in/plugins/lv2/expander_mono",
-        "name": "expander",
-        "control": {
-          "al": 0.015,
-          "er": 4.0,
-          "at": 1.0,
-          "rt": 100.0
-        }
-      },
-      {
-        "type": "lv2",
-        "plugin": "http://lsp-plug.in/plugins/lv2/limiter_mono",
-        "name": "limiter",
-        "control": {
-          "th": 0.95,
-          "at": 0.1,
-          "rt": 10.0
         }
       }
     ],
@@ -108,23 +76,11 @@
       },
       {
         "output": "bf:out",
-        "input": "rnnoise:Input"
-      },
-      {
-        "output": "rnnoise:Output",
-        "input": "hpf:In"
-      },
-      {
-        "output": "hpf:Out",
-        "input": "expander:in"
-      },
-      {
-        "output": "expander:out",
         "input": "mixFinal:In 1"
       },
       {
         "output": "mixFinal:Out",
-        "input": "limiter:in"
+        "input": "hpf:In"
       }
     ],
     "inputs": [
@@ -133,7 +89,7 @@
       "mixO:In 1"
     ],
     "outputs": [
-      "limiter:out"
+      "hpf:Out"
     ]
   },
   "capture.props": {
@@ -163,7 +119,7 @@
     "node.passive": "true",
     "audio.channels": "1",
     "node.virtual": "false",
-    "state.default-volume": 0.343,
+    "state.default-volume": 1.0,
     "audio.allowed-rates": [
       8000,
       11025,

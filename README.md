@@ -9,11 +9,11 @@ Thanks to Asahi Linux, chadmed, Drakelerex and Manawyrm.
 
 ## Supported models:
     
-    # MacBook Pro 16 2019: Id: 16_1 and 16_4
+    # MacBook Pro 16 2019: Id: 16_1, 16_2 and 16_4
 
-    The project has been adjusted to test Asahi Linux audio workflow on a MacBook Por 16 2019 T2 audio driver.
+    The project has been adjusted to test Asahi Linux audio workflow on MacBook Pro 16 2019 T2 audio drivers.
 
-    The Impulse files were created measuring speakers with REW. For Apple mic, using triforce-lv2 plugins.
+    The impulse files were created measuring speakers with REW. For Apple mic, using triforce-lv2 and RNNoise where configured.
 
     For more information about Asahi audio, please visit the original project at asahi-audio
 
@@ -38,7 +38,7 @@ Once the audio is working, you can install the FIRs config in your system.
 Note that this configuration has been tested on Ubuntu 25.10. 
 For previous versions please check speakers_161 and mic branches.
 
-### 1a - Ubuntu dep package
+### 1a - Ubuntu deb package
 
 Download and Install the Ubuntu package from master:
 
@@ -48,12 +48,12 @@ https://github.com/lemmyg/t2-apple-audio-dsp/releases
 
 ```sh
 sudo apt install pipewire pipewire-pulse wireplumber libpipewire-0.3-modules-extra libspa-0.2-modules-extra
-sudo apt install bankstown-lv2 triforce-lv2 lsp-plugins-lv2 swh-lv2
+sudo apt install bankstown-lv2 triforce-lv2 lsp-plugins-lv2 swh-lv2 noise-suppression-for-voice
 ```
 Clone the git branch and install the FIRs config:
 
 ```sh
-git clone -b speakers_161 https://github.com/lemmyg/t2-apple-audio-dsp.git
+git clone https://github.com/lemmyg/t2-apple-audio-dsp.git
 cd t2-apple-audio-dsp
 bash install.sh
 ```
@@ -77,7 +77,7 @@ Somewhere in your configuration, such as configuration.nix, add:
     model = "<your_model>";
   };
 ```
-where `<your_model>` is one of "16_1" "16_4" and "9_1". 
+where `<your_model>` is one of "16_1", "16_2", "16_4" and "9_1".
 
 Rebuid: 
 ```sudo nixos-rebuild switch```

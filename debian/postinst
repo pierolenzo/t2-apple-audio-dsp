@@ -4,11 +4,16 @@
 #
 # Same logic as install.sh; runs as root at package configure. See INSTALL_PATHS.md.
 
+set -e
+
 CONFIG_DIR="/usr/share/t2-apple-audio-dsp/config"
 AUDIO_DIR="/usr/share/t2-linux-audio"
+WP_CONFIG_DIR="/usr/share/wireplumber/wireplumber.conf.d"
+WP_SCRIPT_DIR="/usr/share/wireplumber/scripts/device"
+LEGACY_WP_CONFIG="/etc/wireplumber/wireplumber.conf.d/51-t2-dsp.conf"
 
-# Model dict: "model_id dir_name ..." — add more models here (POSIX sh compatible)
-MODEL_DICT="MacBookPro16,1 16_1 MacBookPro16,4 16_4 MacBookAir9,1 9_1"
+# Model dict: "model_id dir_name ..." - add more models here (POSIX sh compatible)
+MODEL_DICT="MacBookPro16,1 16_1 MacBookPro16,2 16_2 MacBookPro16,4 16_4 MacBookAir9,1 9_1"
 
 get_model_dir() {
     model="$1"
@@ -26,17 +31,61 @@ get_model_dir() {
 # List of supported models (for error messages), derived from dict keys
 SUPPORTED_MODELS=$(set -- $MODEL_DICT; while [ $# -ge 2 ]; do echo "$1"; shift 2; done)
 
+rnnoise_plugin_path() {
+    for path in \
+        /usr/lib64/ladspa/librnnoise_ladspa.so \
+        /usr/lib/ladspa/librnnoise_ladspa.so \
+        /usr/lib/*/ladspa/librnnoise_ladspa.so
+    do
+        if [ -e "$path" ]; then
+            echo "$path"
+            return 0
+        fi
+    done
+    return 1
+}
+
+patch_rnnoise_path() {
+    mic_json="$1"
+    current_path=""
+    plugin_path=""
+
+    if ! grep -q 'librnnoise_ladspa\.so' "$mic_json"; then
+        return 0
+    fi
+
+    current_path=$(sed -n 's/.*"plugin": "\([^"]*librnnoise_ladspa\.so\)".*/\1/p' "$mic_json" | head -n 1)
+    if [ -n "$current_path" ] && [ -e "$current_path" ]; then
+        return 0
+    fi
+
+    if ! plugin_path=$(rnnoise_plugin_path); then
+        echo "t2-apple-audio-dsp: RNNoise LADSPA plugin not found. Install noise-suppression-for-voice."
+        exit 1
+    fi
+
+    echo "t2-apple-audio-dsp: Using RNNoise LADSPA plugin: ${plugin_path}"
+    sed -i "s|\"plugin\": \"[^\"]*librnnoise_ladspa.so\"|\"plugin\": \"${plugin_path}\"|" "$mic_json"
+}
+
+require_file() {
+    if [ ! -f "$1" ]; then
+        echo "t2-apple-audio-dsp: Required file missing: $1"
+        exit 1
+    fi
+}
+
 if [ "$1" != "configure" ]; then
     exit 0
 fi
 
 if [ ! -d "$CONFIG_DIR" ] || [ ! -d "$AUDIO_DIR" ]; then
-    echo "t2-apple-audio-dsp: package data not found, skipping."
-    exit 0
+    echo "t2-apple-audio-dsp: package data not found."
+    exit 1
 fi
 
 # Detect computer model
-MODEL=$(cat /sys/class/dmi/id/product_name 2>/dev/null)
+MODEL=$(cat /sys/class/dmi/id/product_name 2>/dev/null || true)
 
 if [ -z "$MODEL" ]; then
     echo "t2-apple-audio-dsp: Could not detect computer model"
@@ -44,7 +93,7 @@ if [ -z "$MODEL" ]; then
 fi
 
 # Get directory name from mapping
-MODEL_DIR=$(get_model_dir "$MODEL")
+MODEL_DIR=$(get_model_dir "$MODEL" || true)
 if [ -z "$MODEL_DIR" ]; then
     echo "t2-apple-audio-dsp: Model '${MODEL}' is not supported"
     echo "Supported models:"
@@ -58,35 +107,47 @@ if [ ! -d "${CONFIG_DIR}/${MODEL_DIR}" ]; then
     echo "t2-apple-audio-dsp: Configuration not found for model: ${MODEL}"
     echo "Available models:"
     ls -d ${CONFIG_DIR}/*/ 2>/dev/null | sed 's|.*/||' || echo "  (none found)"
-    exit 0
+    exit 1
 fi
 
 if [ ! -d "${AUDIO_DIR}/${MODEL_DIR}" ]; then
     echo "t2-apple-audio-dsp: Audio data not found for model: ${MODEL_DIR}"
-    exit 0
+    exit 1
 fi
 
 echo "Detected model: ${MODEL} (using directory: ${MODEL_DIR})"
 echo "Installing DSP config for ${MODEL}"
 
+require_file "${CONFIG_DIR}/${MODEL_DIR}/51-t2-dsp.conf"
+require_file "${AUDIO_DIR}/${MODEL_DIR}/graph.json"
+require_file "${AUDIO_DIR}/${MODEL_DIR}/mic.json"
+set -- "${AUDIO_DIR}/${MODEL_DIR}"/*.wav
+if [ ! -e "$1" ]; then
+    echo "t2-apple-audio-dsp: No FIR .wav files found for ${MODEL_DIR}"
+    exit 1
+fi
+
 # Install WirePlumber DSP config (uses node.software-dsp module like Asahi Linux)
 if ls ${CONFIG_DIR}/${MODEL_DIR}/*-dsp.conf 1> /dev/null 2>&1; then
-    echo "Copying WirePlumber DSP config to /etc/wireplumber/wireplumber.conf.d"
-    mkdir -p /etc/wireplumber/wireplumber.conf.d
-    cp ${CONFIG_DIR}/${MODEL_DIR}/*-dsp.conf /etc/wireplumber/wireplumber.conf.d/
+    echo "Copying WirePlumber DSP config to ${WP_CONFIG_DIR}"
+    mkdir -p "$WP_CONFIG_DIR"
+    for conf_file in ${CONFIG_DIR}/${MODEL_DIR}/*-dsp.conf; do
+        install -m 0644 "$conf_file" "$WP_CONFIG_DIR/"
+    done
 fi
 
 # Install FIRs, DSP graphs, and Lua scripts to /usr/share/t2-linux-audio/${MODEL_DIR}
 # (Already installed there by the package; no copy step.)
 echo "FIRs, DSP graphs, and Lua scripts are in /usr/share/t2-linux-audio/${MODEL_DIR} (from package)"
+patch_rnnoise_path "${AUDIO_DIR}/${MODEL_DIR}/mic.json"
 
 # Create symlink for WirePlumber to find Lua scripts
 if ls /usr/share/t2-linux-audio/${MODEL_DIR}/*.lua 1> /dev/null 2>&1; then
     echo "Creating symlinks for WirePlumber Lua scripts"
-    mkdir -p /usr/share/wireplumber/scripts/device
+    mkdir -p "$WP_SCRIPT_DIR"
     for lua_file in /usr/share/t2-linux-audio/${MODEL_DIR}/*.lua; do
         lua_basename=$(basename "$lua_file")
-        ln -sf "$lua_file" /usr/share/wireplumber/scripts/device/"$lua_basename"
+        ln -sf "$lua_file" "$WP_SCRIPT_DIR/$lua_basename"
     done
 fi
 
@@ -102,11 +163,11 @@ if [ -f "/etc/pipewire/pipewire.conf.d/t2_${OLD_MODEL_ID}_mic.conf" ]; then
     rm -f "/etc/pipewire/pipewire.conf.d/t2_${OLD_MODEL_ID}_mic.conf"
 fi
 
-# Signal that a reboot is required
-if [ -d /var/run ]; then
-    touch /var/run/reboot-required
-    echo "t2-apple-audio-dsp" >> /var/run/reboot-required.pkgs
+if [ -e "$LEGACY_WP_CONFIG" ]; then
+    echo "Removing legacy WirePlumber config from /etc"
+    rm -f "$LEGACY_WP_CONFIG"
 fi
+
 echo "To apply changes, restart pipewire for your user:"
 echo "  systemctl --user restart wireplumber pipewire pipewire-pulse"
 echo "Or log out and log back in."

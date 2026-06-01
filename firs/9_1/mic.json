@@ -1,6 +1,6 @@
 {
-  "node.description": "MacBook Pro T2 DSP Mic",
-  "media.name": "MacBook Pro T2 DSP Mic",
+  "node.description": "MacBook Air T2 DSP Mic",
+  "media.name": "MacBook Air T2 DSP Mic",
   "filter.graph": {
     "nodes": [
       {
@@ -59,7 +59,7 @@
           "Gain": 1,
           "Q": 0.707
         }
-      },
+      }
     ],
     "links": [
       {
@@ -81,16 +81,16 @@
       {
         "output": "mixFinal:Out",
         "input": "hpf:In"
-      },
+      }
     ],
     "inputs": [
       "mixL:In 1",
       "mixR:In 1",
-      "mixO:In 1",
+      "mixO:In 1"
     ],
     "outputs": [
       "hpf:Out"
-    ],
+    ]
   },
   "capture.props": {
     "node.name": "effect_input.t2-91-mic",

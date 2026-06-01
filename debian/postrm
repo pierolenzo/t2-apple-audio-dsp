@@ -3,22 +3,32 @@
 # (C) 2025 Linux T2 Kernel Team
 # Same removals as uninstall.sh (see INSTALL_PATHS.md). Runs as root, no sudo.
 
+set -e
+
 if [ "$1" != "remove" ] && [ "$1" != "purge" ]; then
   exit 0
 fi
 
-echo "Removing WirePlumber DSP config from /etc/wireplumber/wireplumber.conf.d"
-rm -f /etc/wireplumber/wireplumber.conf.d/*-dsp.conf
+echo "Removing WirePlumber DSP config"
+rm -f /usr/share/wireplumber/wireplumber.conf.d/51-t2-dsp.conf
+rm -f /etc/wireplumber/wireplumber.conf.d/51-t2-dsp.conf
 
 echo "Removing old PipeWire config if present"
-rm -f /etc/pipewire/pipewire.conf.d/10-t2_161_*.conf
-rm -f /etc/pipewire/pipewire.conf.d/*-t2-dsp.conf
+for old_model_id in 161 162 164 91; do
+  rm -f "/etc/pipewire/pipewire.conf.d/t2_${old_model_id}_speakers.conf"
+  rm -f "/etc/pipewire/pipewire.conf.d/t2_${old_model_id}_mic.conf"
+  rm -f "/etc/pipewire/pipewire.conf.d/10-t2_${old_model_id}_speakers.conf"
+  rm -f "/etc/pipewire/pipewire.conf.d/10-t2_${old_model_id}_mic.conf"
+done
 
 echo "Removing Lua script symlinks from /usr/share/wireplumber/scripts/device"
 rm -f /usr/share/wireplumber/scripts/device/t2-force-unmute.lua
 
 echo "Removing audio data (FIRs, graphs, Lua) from /usr/share/t2-linux-audio"
-rm -rf /usr/share/t2-linux-audio
+for model in 16_1 16_2 16_4 9_1; do
+  rm -rf "/usr/share/t2-linux-audio/$model"
+done
+rmdir /usr/share/t2-linux-audio 2>/dev/null || true
 
 echo "To apply: systemctl --user restart wireplumber pipewire pipewire-pulse"
 

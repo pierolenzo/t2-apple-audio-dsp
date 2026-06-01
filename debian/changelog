@@ -1,3 +1,13 @@
+t2-apple-audio-dsp (1.0.2-1) oracular; urgency=medium
+
+  * Fixed 9_1 microphone JSON syntax.
+  * Added MacBookPro16,2 package detection.
+  * Aligned WirePlumber install path with /usr/share/wireplumber.
+  * Added RNNoise LADSPA dependency and install-time path validation.
+  * Hardened install, uninstall and package build scripts.
+
+ -- lemmyg <lemmygl@protonmail.com>  Wed, 27 May 2026 20:00:00 +0200
+
 t2-apple-audio-dsp (1.0.1-1) oracular; urgency=low
 
   * Fixed support for 9_1 model.
@@ -21,4 +31,3 @@ t2-apple-audio-dsp (0.3.0-1) oracular; urgency=medium
   * Requires Ubuntu 25.10 (Oracular) or later
 
  -- lemmygl@protonmail.com  20 Feb 2026
-

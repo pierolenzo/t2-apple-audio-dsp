@@ -1,6 +1,16 @@
 CHANGES
 -------
 
+* 1.0.2-1:
+
+  ** Fixed 9_1 microphone JSON syntax.
+
+  ** Aligned manual and deb installs on /usr/share/wireplumber.
+
+  ** Added 16_2 package detection and RNNoise dependency.
+
+  ** Hardened install, uninstall and package build scripts.
+
 * 1.0.1-1:
 
   ** Fixed support for 9_1 model.
