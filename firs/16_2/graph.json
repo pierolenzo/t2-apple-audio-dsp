@@ -9,53 +9,12 @@
         "name": "bassex",
         "control": {
           "bypass": 0,
-          "amt": 1.20,
+          "amt": 1.4,
           "sat_second": 1.05,
-          "sat_third": 2.00,
+          "sat_third": 1.6,
           "blend": 1.0,
-          "ceil": 250.0,
-          "floor": 20.0,
-          "final_hp": 50.0
-        }
-      },
-      {
-        "type": "builtin",
-        "label": "bq_lowpass",
-        "name": "woof_lpf_l",
-        "control": {
-          "Freq": 2500.0,
-          "Gain": 1.0,
-          "Q": 0.707
-        }
-      },
-      {
-        "type": "builtin",
-        "label": "bq_lowpass",
-        "name": "woof_lpf_r",
-        "control": {
-          "Freq": 2500.0,
-          "Gain": 1.0,
-          "Q": 0.707
-        }
-      },
-      {
-        "type": "builtin",
-        "label": "bq_highpass",
-        "name": "tw_hpf_l",
-        "control": {
-          "Freq": 2500.0,
-          "Gain": 1.0,
-          "Q": 0.707
-        }
-      },
-      {
-        "type": "builtin",
-        "label": "bq_highpass",
-        "name": "tw_hpf_r",
-        "control": {
-          "Freq": 2500.0,
-          "Gain": 1.0,
-          "Q": 0.707
+          "ceil": 220.0,
+          "floor": 140.0
         }
       },
       {
@@ -85,12 +44,10 @@
         "config": {
           "filename": [
             "/usr/share/t2-linux-audio/16_2/front-44.wav",
-            "/usr/share/t2-linux-audio/16_2/front-48.wav",
-            "/usr/share/t2-linux-audio/16_2/front-96.wav",
-            "/usr/share/t2-linux-audio/16_2/front-192.wav"
+            "/usr/share/t2-linux-audio/16_2/front-48.wav"
           ],
           "channel": 0,
-          "gain": 2.0
+          "gain": 1.26
         }
       },
       {
@@ -100,12 +57,10 @@
         "config": {
           "filename": [
             "/usr/share/t2-linux-audio/16_2/front-44.wav",
-            "/usr/share/t2-linux-audio/16_2/front-48.wav",
-            "/usr/share/t2-linux-audio/16_2/front-96.wav",
-            "/usr/share/t2-linux-audio/16_2/front-192.wav"
+            "/usr/share/t2-linux-audio/16_2/front-48.wav"
           ],
           "channel": 0,
-          "gain": 2.0
+          "gain": 1.26
         }
       },
       {
@@ -115,12 +70,10 @@
         "config": {
           "filename": [
             "/usr/share/t2-linux-audio/16_2/rear-44.wav",
-            "/usr/share/t2-linux-audio/16_2/rear-48.wav",
-            "/usr/share/t2-linux-audio/16_2/rear-96.wav",
-            "/usr/share/t2-linux-audio/16_2/rear-192.wav"
+            "/usr/share/t2-linux-audio/16_2/rear-48.wav"
           ],
           "channel": 0,
-          "gain": 2.0
+          "gain": 1.26
         }
       },
       {
@@ -130,12 +83,10 @@
         "config": {
           "filename": [
             "/usr/share/t2-linux-audio/16_2/rear-44.wav",
-            "/usr/share/t2-linux-audio/16_2/rear-48.wav",
-            "/usr/share/t2-linux-audio/16_2/rear-96.wav",
-            "/usr/share/t2-linux-audio/16_2/rear-192.wav"
+            "/usr/share/t2-linux-audio/16_2/rear-48.wav"
           ],
           "channel": 0,
-          "gain": 2.0
+          "gain": 1.26
         }
       },
       {
@@ -147,12 +98,12 @@
           "ce_0": 1,
           "sla_0": 5.0,
           "cr_0": 1.75,
-          "al_0": 0.725,
+          "al_0": 0.625,
           "at_0": 1.0,
           "rt_0": 100,
           "kn_0": 0.125,
           "cbe_1": 1,
-          "sf_1": 500.0,
+          "sf_1": 250.0,
           "ce_1": 0,
           "cbe_2": 0,
           "ce_2": 0,
@@ -175,7 +126,7 @@
           "al": 1.0,
           "at": 1.0,
           "rt": 100.0,
-          "cr": 20.0,
+          "cr": 15.0,
           "kn": 0.5
         }
       },
@@ -186,14 +137,14 @@
         "control": {
           "mode": 0,
           "ce_0": 1,
-          "sla_0": 0.1,
-          "cr_0": 2.0,
+          "sla_0": 5.0,
+          "scr_0": 1.75,
           "al_0": 0.625,
-          "at_0": 0.5,
-          "rt_0": 50,
+          "at_0": 1.0,
+          "rt_0": 100,
           "kn_0": 0.125,
           "cbe_1": 1,
-          "sf_1": 2500.0,
+          "sf_1": 250.0,
           "ce_1": 0,
           "cbe_2": 0,
           "ce_2": 0,
@@ -216,50 +167,34 @@
           "al": 1.0,
           "at": 1.0,
           "rt": 100.0,
-          "cr": 20.0,
+          "cr": 15.0,
           "kn": 0.5
         }
       }
     ],
     "links": [
       {
-        "output": "ell:out",
-        "input": "bassex:in_l"
-      },
-      {
-        "output": "elr:out",
-        "input": "bassex:in_r"
-      },
-      {
         "output": "bassex:out_l",
-        "input": "woof_lpf_l:In"
+        "input": "ell:in"
       },
       {
         "output": "bassex:out_r",
-        "input": "woof_lpf_r:In"
+        "input": "elr:in"
       },
       {
-        "output": "woof_lpf_l:Out",
+        "output": "ell:out",
         "input": "convFL:In"
       },
       {
-        "output": "woof_lpf_r:Out",
+        "output": "elr:out",
         "input": "convFR:In"
       },
       {
         "output": "ell:out",
-        "input": "tw_hpf_l:In"
-      },
-      {
-        "output": "elr:out",
-        "input": "tw_hpf_r:In"
-      },
-      {
-        "output": "tw_hpf_l:Out",
         "input": "convRL:In"
       },
       {
-        "output": "tw_hpf_r:Out",
+        "output": "elr:out",
         "input": "convRR:In"
       },
       {
@@ -296,8 +231,8 @@
       }
     ],
     "inputs": [
-      "ell:in",
-      "elr:in"
+      "bassex:in_l",
+      "bassex:in_r"
     ],
     "outputs": [
       "fwoofer_lim:out_l",
@@ -308,13 +243,13 @@
     "capture.volumes": [
       {
         "control": "ell:volume",
-        "min": -42.5,
+        "min": -40.0,
         "max": 0.0,
         "scale": "cubic"
       },
       {
         "control": "elr:volume",
-        "min": -42.5,
+        "min": -40.0,
         "max": 0.0,
         "scale": "cubic"
       }
