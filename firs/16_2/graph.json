@@ -9,7 +9,7 @@
         "name": "bassex",
         "control": {
           "bypass": 0,
-          "amt": 1.4,
+          "amt": 2.0,
           "sat_second": 1.05,
           "sat_third": 1.6,
           "blend": 1.0,
@@ -47,7 +47,7 @@
             "/usr/share/t2-linux-audio/16_2/front-48.wav"
           ],
           "channel": 0,
-          "gain": 1.26
+          "gain": 3.50
         }
       },
       {
@@ -60,7 +60,7 @@
             "/usr/share/t2-linux-audio/16_2/front-48.wav"
           ],
           "channel": 0,
-          "gain": 1.26
+          "gain": 3.50
         }
       },
       {
@@ -73,7 +73,7 @@
             "/usr/share/t2-linux-audio/16_2/rear-48.wav"
           ],
           "channel": 0,
-          "gain": 1.26
+          "gain": 3.50
         }
       },
       {
@@ -86,7 +86,7 @@
             "/usr/share/t2-linux-audio/16_2/rear-48.wav"
           ],
           "channel": 0,
-          "gain": 1.26
+          "gain": 3.50
         }
       },
       {
